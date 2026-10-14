@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChemTable: Interactive Chemistry Learning Suite (CBSE / NCERT)</title>
+    <!-- SEO & Search Engine Indexing Meta Tags -->
+    <meta name="description" content="Interactive Chemistry Learning Suite for Indian High-School Students (CBSE / NCERT Classes 9-12). Features 118-element periodic table, molar mass calculator, stoichiometry lab, 3D Bohr models, 3D VSEPR geometries, gas laws simulator, virtual titration, and practice quiz.">
+    <meta name="keywords" content="Chemistry, Periodic Table, CBSE, NCERT, Class 9, Class 10, Class 11, Class 12, Stoichiometry, Molar Mass, Bohr Model, Gas Laws, Titration Lab, Reaction Balancer, High School Science">
+    <meta name="author" content="ChemTable Education">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Open Graph / Social Sharing Meta Tags -->
+    <meta property="og:title" content="ChemTable: Interactive Chemistry Learning Suite">
+    <meta property="og:description" content="Interactive Chemistry Learning Suite for CBSE / NCERT Classes 9-12 with 3D molecular simulations, stoichiometry workbench, and interactive periodic table.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts for Editorial Typography with System Fallbacks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Link to Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- SVG Favicon Data URI to prevent 404 console errors -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><circle cx='12' cy='12' r='4'/><ellipse cx='12' cy='12' rx='10' ry='4.5' fill='none' stroke='%232563eb' stroke-width='2' transform='rotate(30 12 12)'/><ellipse cx='12' cy='12' rx='10' ry='4.5' fill='none' stroke='%232563eb' stroke-width='2' transform='rotate(-30 12 12)'/></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top App Header with Curriculum & Theme Controls -->
+        <header class="app-header" role="banner">
+            <div class="header-top-bar">
+                <div class="brand-wrapper">
+                    <div class="brand-icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                            <ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"></ellipse>
+                            <ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-30 12 12)"></ellipse>
+                        </svg>
+                    </div>
+                    <div class="brand-info">
+                        <h1>ChemTable <span class="curriculum-badge-tag">CBSE / NCERT</span></h1>
+                        <p class="brand-tagline">Interactive High-School Chemistry Learning Suite • Classes 9, 10, 11 &amp; 12</p>
+                    </div>
+                </div>
+
+                <div class="header-controls">
+                    <!-- Curriculum Filter Selector -->
+                    <div class="curriculum-select-wrapper">
+                        <label for="curriculum-filter" id="curriculum-label">Curriculum Level:</label>
+                        <select id="curriculum-filter" class="curriculum-dropdown" aria-labelledby="curriculum-label">
+                            <option value="all">All Classes (9–12)</option>
+                            <option value="9-10">Classes 9 &amp; 10 (Foundational)</option>
+                            <option value="11-12">Classes 11 &amp; 12 (Advanced)</option>
+                        </select>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle light or dark theme">
+                        <span id="theme-icon" aria-hidden="true">🌙</span>
+                        <span id="theme-text">Dark Theme</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categorized Navigation Bar -->
+            <nav class="tabs-nav" role="tablist" aria-label="Chemistry Modules Navigation">
+                <button class="tab-btn active" data-tab="tab-table" role="tab" aria-selected="true" aria-controls="tab-table">Periodic Table</button>
+                <button class="tab-btn" data-tab="tab-curriculum" role="tab" aria-selected="false" aria-controls="tab-curriculum">Curriculum Paths <span class="tab-badge">NCERT</span></button>
+                <button class="tab-btn" data-tab="tab-calculator" role="tab" aria-selected="false" aria-controls="tab-calculator">Molar Mass</button>
+                <button class="tab-btn" data-tab="tab-stoichiometry" role="tab" aria-selected="false" aria-controls="tab-stoichiometry">Mole Concept &amp; Stoichiometry</button>
+                <button class="tab-btn" data-tab="tab-bohr" role="tab" aria-selected="false" aria-controls="tab-bohr">Bohr Model &amp; Aufbau</button>
+                <button class="tab-btn" data-tab="tab-molecules" role="tab" aria-selected="false" aria-controls="tab-molecules">3D Molecules (VSEPR)</button>
+                <button class="tab-btn" data-tab="tab-gas" role="tab" aria-selected="false" aria-controls="tab-gas">Gas Laws (PV=nRT)</button>
+                <button class="tab-btn" data-tab="tab-lab" role="tab" aria-selected="false" aria-controls="tab-lab">Virtual Titration Lab</button>
+                <button class="tab-btn" data-tab="tab-reactions" role="tab" aria-selected="false" aria-controls="tab-reactions">Equation Balancer</button>
+                <button class="tab-btn" data-tab="tab-rxn-types" role="tab" aria-selected="false" aria-controls="tab-rxn-types">Reaction Types</button>
+                <button class="tab-btn" data-tab="tab-compare" role="tab" aria-selected="false" aria-controls="tab-compare">Element Comparison</button>
+                <button class="tab-btn" data-tab="tab-analytics" role="tab" aria-selected="false" aria-controls="tab-analytics">Analytics</button>
+                <button class="tab-btn" data-tab="tab-quiz" role="tab" aria-selected="false" aria-controls="tab-quiz">Practice Quiz (10 Qs)</button>
+            </nav>
+        </header>
+
+        <main role="main">
+            <!-- ===================================================================
+                 TAB 1: INTERACTIVE PERIODIC TABLE
+                 =================================================================== -->
+            <section id="tab-table" class="tab-content active" role="tabpanel" aria-labelledby="tab-table">
+                <div class="controls-panel">
+                    <div class="search-filter-row">
+                        <input type="text" id="search-input" class="search-bar" placeholder="Search element by name, symbol, or atomic number (e.g., Sodium, Fe, 79)..." list="element-suggestions" aria-label="Search elements or compounds">
+                        <datalist id="element-suggestions">
+                            <!-- Populated by JS -->
+                        </datalist>
+
+                        <div class="state-filters" role="group" aria-label="Filter by standard physical state at 25 degrees Celsius">
+                            <span class="state-filter-label">State at 25°C:</span>
+                            <button class="state-btn" data-state="Solid">Solid</button>
+                            <button class="state-btn" data-state="Liquid">Liquid</button>
+                            <button class="state-btn" data-state="Gas">Gas</button>
+                            <button class="state-btn" data-state="Unknown">Unknown</button>
+                        </div>
+                    </div>
+
+                    <div class="legend-heatmap-row">
+                        <div id="category-legend" class="category-legend" role="group" aria-label="Chemical category filter legend">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <div class="trend-selector">
+                            <label for="trend-select">Color Mode / Trend:</label>
+                            <select id="trend-select" class="search-bar">
+                                <option value="category">Categories (IUPAC Standard)</option>
+                                <option value="electronegativity">Electronegativity (Pauling Scale)</option>
+                                <option value="radius">Atomic Radius (pm)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="periodic-table-wrapper" tabindex="0" aria-label="Scrollable periodic table view">
+                    <div id="periodic-table" class="periodic-table" role="grid" aria-label="118 Elements Periodic Table Grid">
+                        <!-- 118 Element cards injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 2: CURRICULUM LEARNING PATHS (CBSE/NCERT)
+                 =================================================================== -->
+            <section id="tab-curriculum" class="tab-content" role="tabpanel">
+                <div class="curriculum-hero">
+                    <h3>Indian Chemistry Curriculum Navigator</h3>
+                    <p>Structured NCERT &amp; CBSE chapter mappings covering foundational chemistry for Classes 9–10 and advanced conceptual chemistry for Classes 11–12.</p>
+                    <div class="class-filter-bar">
+                        <button class="class-pill-btn active" data-class="all">All Units</button>
+                        <button class="class-pill-btn" data-class="class9">Class 9 (NCERT Science)</button>
+                        <button class="class-pill-btn" data-class="class10">Class 10 (NCERT Science)</button>
+                        <button class="class-pill-btn" data-class="class11">Class 11 (NCERT Chemistry)</button>
+                        <button class="class-pill-btn" data-class="class12">Class 12 (NCERT Chemistry)</button>
+                    </div>
+                </div>
+
+                <div id="curriculum-chapters-container" class="curriculum-chapters-grid">
+                    <!-- Populated dynamically by JS with official NCERT chapters, learning objectives, and direct tool launchers -->
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 3: MOLAR MASS CALCULATOR
+                 =================================================================== -->
+            <section id="tab-calculator" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Molar Mass &amp; Composition Breakdown</h2>
+                        <p>Enter any chemical formula with brackets and parentheses (e.g., <code>CuSO4</code>, <code>(NH4)2SO4</code>, <code>C6H12O6</code>) to calculate exact molar mass and elemental percentages.</p>
+                    </div>
+                    <div class="calculator-grid">
+                        <div>
+                            <div class="calc-input-group">
+                                <input type="text" id="formula-input" class="search-bar" placeholder="e.g., Ca(OH)2 or Glucose" list="compound-suggestions" aria-label="Chemical formula input">
+                                <datalist id="compound-suggestions">
+                                    <option value="H2O">Water</option>
+                                    <option value="CO2">Carbon Dioxide</option>
+                                    <option value="NaCl">Sodium Chloride</option>
+                                    <option value="NH3">Ammonia</option>
+                                    <option value="CH4">Methane</option>
+                                    <option value="HCl">Hydrochloric Acid</option>
+                                    <option value="H2SO4">Sulfuric Acid</option>
+                                    <option value="C6H12O6">Glucose</option>
+                                    <option value="NaOH">Sodium Hydroxide</option>
+                                    <option value="(NH4)2SO4">Ammonium Sulfate</option>
+                                    <option value="Ca(OH)2">Calcium Hydroxide</option>
+                                </datalist>
+                                <button id="calc-btn" class="action-btn">Calculate</button>
+                            </div>
+                            <div id="calc-result" class="calc-result-box" aria-live="polite">Enter a formula to begin analysis.</div>
+                            <div class="callout callout-info">
+                                <strong>CBSE Class 9 &amp; 11 Reference:</strong> Formula mass is the sum of standard atomic masses of all atoms in a formula unit, expressed in grams per mole (g/mol).
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="font-size: var(--font-base); font-weight: 700; margin-bottom: var(--space-2);">Elemental Mass Percentages</h3>
+                            <div id="composition-breakdown" class="composition-breakdown" aria-live="polite">
+                                <!-- Bars injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 4: MOLE CONCEPT & STOICHIOMETRY LAB (NEW EDUCATIONAL EXPANSION)
+                 =================================================================== -->
+            <section id="tab-stoichiometry" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Mole Concept &amp; Stoichiometry Laboratory</h2>
+                        <p>Core curriculum workbench for Class 9 (Chapter 3) &amp; Class 11 (Unit 1): Interconvert mass, moles, particle counts, and calculate limiting reagents.</p>
+                    </div>
+
+                    <div class="calculator-grid">
+                        <div class="stoich-calc-panel">
+                            <h3 style="font-size: var(--font-base); font-weight: 700;">1. Mole-Particle-Mass Interconversion</h3>
+                            <div class="stoich-form-row">
+                                <div>
+                                    <label for="stoich-compound-select" style="font-size: var(--font-xs); font-weight: 600;">Compound:</label>
+                                    <select id="stoich-compound-select" class="search-bar" style="width: 100%;">
+                                        <option value="H2O">Water (H₂O, 18.015 g/mol)</option>
+                                        <option value="CO2">Carbon Dioxide (CO₂, 44.01 g/mol)</option>
+                                        <option value="NaCl">Sodium Chloride (NaCl, 58.44 g/mol)</option>
+                                        <option value="O2">Oxygen Gas (O₂, 32.00 g/mol)</option>
+                                        <option value="C6H12O6">Glucose (C₆H₁₂O₆, 180.16 g/mol)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="stoich-input-value" style="font-size: var(--font-xs); font-weight: 600;">Known Quantity:</label>
+                                    <input type="number" id="stoich-input-value" class="search-bar" value="1.0" step="0.1" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="stoich-input-type" style="font-size: var(--font-xs); font-weight: 600;">Quantity Type:</label>
+                                <select id="stoich-input-type" class="search-bar" style="width: 100%;">
+                                    <option value="moles">Moles (mol)</option>
+                                    <option value="mass">Mass in Grams (g)</option>
+                                    <option value="particles">Number of Molecules (N)</option>
+                                    <option value="volume">Gas Volume at STP (Liters)</option>
+                                </select>
+                            </div>
+                            <button id="calc-stoich-btn" class="action-btn" style="margin-top: var(--space-2);">Compute Conversions</button>
+
+                            <div id="stoich-derivation-output" class="stoich-derivation-box" aria-live="polite">
+                                Click 'Compute Conversions' to view quantitative step-by-step calculations with Avogadro's constant.
+                            </div>
+                        </div>
+
+                        <div class="stoich-calc-panel">
+                            <h3 style="font-size: var(--font-base); font-weight: 700;">2. Limiting Reagent Workbench</h3>
+                            <p style="font-size: var(--font-xs); color: var(--text-secondary);">Model Reaction: 2H₂ + O₂ → 2H₂O</p>
+                            <div class="stoich-form-row">
+                                <div>
+                                    <label for="limit-reag-h2" style="font-size: var(--font-xs); font-weight: 600;">Hydrogen (H₂) Moles:</label>
+                                    <input type="number" id="limit-reag-h2" class="search-bar" value="4.0" step="0.5" style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label for="limit-reag-o2" style="font-size: var(--font-xs); font-weight: 600;">Oxygen (O₂) Moles:</label>
+                                    <input type="number" id="limit-reag-o2" class="search-bar" value="1.5" step="0.5" style="width: 100%;">
+                                </div>
+                            </div>
+                            <button id="calc-limiting-btn" class="action-btn" style="margin-top: var(--space-2);">Identify Limiting Reagent</button>
+
+                            <div id="limiting-derivation-output" class="stoich-derivation-box" aria-live="polite">
+                                Calculate to determine the stoichiometric limiting reagent and theoretical product yield.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 5: 3D BOHR MODEL & AUFBAU ELECTRON CONFIGURATION
+                 =================================================================== -->
+            <section id="tab-bohr" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>3D Bohr Atomic Structure &amp; Aufbau Configuration</h2>
+                        <p>Explore concentric orbital shells and electronic configurations. Note: Class 11 anomalies (such as Chromium and Copper) are highlighted with specific stability rationales.</p>
+                    </div>
+
+                    <div class="calc-input-group" style="max-width: 500px;">
+                        <input type="text" id="bohr-search-input" class="search-bar" placeholder="Search element (e.g., Chromium, Fe, Copper)..." list="element-suggestions" aria-label="Search element for Bohr visualization">
+                        <button id="view-bohr-btn" class="action-btn">Inspect Atom</button>
+                    </div>
+
+                    <div class="model-workspace-grid">
+                        <div id="bohr-canvas-container" class="canvas-viewport-container" aria-label="3D Bohr model WebGL canvas view">
+                            <!-- Three.js Bohr Model Scene -->
+                        </div>
+
+                        <div>
+                            <div id="electron-config-display" class="electron-config-card" aria-live="polite">
+                                Select an element to inspect its electronic configuration.
+                            </div>
+
+                            <div id="aufbau-note-box" class="callout callout-info">
+                                <strong>Aufbau Filling Rule:</strong> Electrons occupy orbitals of lowest energy first (1s → 2s → 2p → 3s → 3p → 4s → 3d). Half-filled (d⁵) and fully-filled (d¹⁰) subshells possess exceptional exchange-energy stability.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 6: 3D MOLECULAR GEOMETRY & VSEPR EXPLORER
+                 =================================================================== -->
+            <section id="tab-molecules" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>3D Molecular Geometry &amp; VSEPR Theory Explorer</h2>
+                        <p>CBSE Class 11 Unit 4: Valence Shell Electron Pair Repulsion (VSEPR) theory predicts 3D molecular shapes by minimizing electrostatic repulsion between bonding pairs and lone pairs.</p>
+                    </div>
+
+                    <div class="search-filter-row" style="margin-bottom: var(--space-4);">
+                        <label for="molecule-select" style="font-size: var(--font-sm); font-weight: 600;">Select Molecule:</label>
+                        <select id="molecule-select" class="search-bar" style="min-width: 300px;">
+                            <option value="H2O">Water (H₂O) — Bent (104.5°)</option>
+                            <option value="CO2">Carbon Dioxide (CO₂) — Linear (180°)</option>
+                            <option value="CH4">Methane (CH₄) — Tetrahedral (109.5°)</option>
+                            <option value="NH3">Ammonia (NH₃) — Trigonal Pyramidal (107°)</option>
+                            <option value="BF3">Boron Trifluoride (BF₃) — Trigonal Planar (120°)</option>
+                            <option value="SF6">Sulfur Hexafluoride (SF₆) — Octahedral (90°)</option>
+                            <option value="PCl5">Phosphorus Pentachloride (PCl₅) — Trigonal Bipyramidal</option>
+                            <option value="O3">Ozone (O₃) — Bent Resonance</option>
+                            <option value="HCN">Hydrogen Cyanide (HCN) — Linear (180°)</option>
+                            <option value="C2H5OH">Ethanol (C₂H₅OH) — Organic Alcohol</option>
+                        </select>
+                        <button id="toggle-molecule-spin-btn" class="btn-secondary">Pause Auto-Rotate</button>
+                    </div>
+
+                    <div class="model-workspace-grid">
+                        <div id="molecule-3d-container" class="canvas-viewport-container" aria-label="3D molecular geometry WebGL canvas view">
+                            <!-- Three.js Molecule Scene -->
+                        </div>
+
+                        <div class="scientific-card" style="padding: var(--space-4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <h3 id="mol-name" style="font-size: var(--font-xl); font-weight: 700;">Water</h3>
+                                <span id="mol-formula" class="curriculum-badge-tag" style="font-size: var(--font-sm);">H₂O</span>
+                            </div>
+
+                            <div class="vsepr-stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-label">Molecular Shape</div>
+                                    <div class="stat-val" id="mol-shape">Bent</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Electron Geometry</div>
+                                    <div class="stat-val" id="mol-e-geom">Tetrahedral</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Bond Angle</div>
+                                    <div class="stat-val" id="mol-angle">104.5°</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Hybridization</div>
+                                    <div class="stat-val" id="mol-hybrid">sp³</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Polarity</div>
+                                    <div class="stat-val" id="mol-polarity">Polar (μ = 1.85 D)</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Steric Number</div>
+                                    <div class="stat-val" id="mol-steric">4 (2 bonds, 2 lone pairs)</div>
+                                </div>
+                            </div>
+
+                            <div class="callout callout-info" id="mol-desc" style="margin-top: var(--space-3);">
+                                Two lone pairs exert high repulsion against O-H bonding pairs, reducing the ideal tetrahedral angle from 109.5° to 104.5°.
+                            </div>
+
+                            <div class="cpk-legend-row" style="margin-top: var(--space-3);">
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#ffffff; border:1px solid #94a3b8;"></span> H</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#475569;"></span> C</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#dc2626;"></span> O</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#2563eb;"></span> N</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#059669;"></span> Cl/F</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#ca8a04;"></span> S</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#ea580c;"></span> P</span>
+                                <span class="cpk-dot-item"><span class="cpk-color-circle" style="background:#db2777;"></span> B</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 7: GAS LAWS & MOLECULAR KINETICS SIMULATOR
+                 =================================================================== -->
+            <section id="tab-gas" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Gas Laws &amp; Molecular Kinetics Simulator</h2>
+                        <p>CBSE Class 11 Unit 5: Simulate the Ideal Gas Equation (PV = nRT) and examine Boyle's, Charles's, and Gay-Lussac's laws via real-time elastic particle kinetics.</p>
+                    </div>
+
+                    <div class="class-filter-bar" style="margin-bottom: var(--space-4);">
+                        <button class="gas-mode-btn active btn-secondary" data-mode="ideal">Ideal Gas Law (PV = nRT)</button>
+                        <button class="gas-mode-btn btn-secondary" data-mode="boyle">Boyle's Law (T constant)</button>
+                        <button class="gas-mode-btn btn-secondary" data-mode="charles">Charles's Law (P constant)</button>
+                        <button class="gas-mode-btn btn-secondary" data-mode="gay-lussac">Gay-Lussac's Law (V constant)</button>
+                    </div>
+
+                    <div class="gas-sim-grid">
+                        <div class="chamber-wrapper">
+                            <div class="gas-canvas-frame">
+                                <canvas id="gas-canvas" width="400" height="380" aria-label="Gas particles chamber with movable piston"></canvas>
+                                <div id="heat-visual" class="flame-ice-indicator" style="display:none;">
+                                    <div id="burner-flame" class="burner-flame"></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <button id="cool-gas-btn" class="btn-secondary">❄️ Cool (-20 K)</button>
+                                <button id="heat-gas-btn" class="btn-secondary">🔥 Heat (+20 K)</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="digital-gauges-cluster">
+                                <div class="gauge-card">
+                                    <div class="gauge-title">Pressure (P)</div>
+                                    <div class="gauge-value" id="gas-p-val">1.00 <small>atm</small></div>
+                                    <div class="gauge-subtext" id="gas-p-kpa">101.3 kPa</div>
+                                </div>
+                                <div class="gauge-card">
+                                    <div class="gauge-title">Volume (V)</div>
+                                    <div class="gauge-value" id="gas-v-val">22.4 <small>L</small></div>
+                                    <div class="gauge-subtext">Chamber capacity</div>
+                                </div>
+                                <div class="gauge-card">
+                                    <div class="gauge-title">Temperature (T)</div>
+                                    <div class="gauge-value" id="gas-t-val">273.1 <small>K</small></div>
+                                    <div class="gauge-subtext" id="gas-t-c">0.0 °C</div>
+                                </div>
+                                <div class="gauge-card">
+                                    <div class="gauge-title">Amount (n)</div>
+                                    <div class="gauge-value" id="gas-n-val">1.00 <small>mol</small></div>
+                                    <div class="gauge-subtext">Gas quantity</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                                <div>
+                                    <label for="gas-temp-slider" style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:600;">
+                                        <span>Temperature (T):</span>
+                                        <span id="temp-label">273 K</span>
+                                    </label>
+                                    <input type="range" id="gas-temp-slider" min="100" max="700" value="273" step="1" style="width: 100%;">
+                                </div>
+
+                                <div>
+                                    <label for="gas-vol-slider" style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:600;">
+                                        <span>Volume (V):</span>
+                                        <span id="vol-label">22.4 L</span>
+                                    </label>
+                                    <input type="range" id="gas-vol-slider" min="5" max="40" value="22.4" step="0.5" style="width: 100%;">
+                                </div>
+
+                                <div>
+                                    <label for="gas-mol-slider" style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:600;">
+                                        <span>Moles of Gas (n):</span>
+                                        <span id="mol-label">1.00 mol</span>
+                                    </label>
+                                    <input type="range" id="gas-mol-slider" min="0.2" max="2.5" value="1.0" step="0.1" style="width: 100%;">
+                                </div>
+
+                                <div>
+                                    <label for="gas-type-select" style="font-size:var(--font-xs); font-weight:600;">Gas Specie (Molar Mass):</label>
+                                    <select id="gas-type-select" class="search-bar" style="width: 100%;">
+                                        <option value="He">Helium (He, M = 4.00 g/mol) — High Kinetic Speed</option>
+                                        <option value="Ne">Neon (Ne, M = 20.18 g/mol)</option>
+                                        <option value="N2" selected>Nitrogen (N₂, M = 28.01 g/mol) — Atmospheric</option>
+                                        <option value="O2">Oxygen (O₂, M = 32.00 g/mol)</option>
+                                        <option value="CO2">Carbon Dioxide (CO₂, M = 44.01 g/mol) — Heavy</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="callout callout-info" id="gas-law-explanation">
+                                <strong>STP Reference:</strong> At 273.15 K (0°C) and 1 atm, 1 mole of any ideal gas occupies 22.414 Liters. Universal gas constant R = 0.08206 L·atm / (mol·K).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 8: VIRTUAL TITRATION LAB
+                 =================================================================== -->
+            <section id="tab-lab" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Virtual Acid-Base Titration Laboratory</h2>
+                        <p>CBSE Class 10 (Acids &amp; Bases) &amp; Class 11 (Equilibrium): Simulate titrations with Henderson-Hasselbalch buffer calculations, observe the equivalence point, and watch the visual phenolphthalein indicator transition.</p>
+                    </div>
+
+                    <div class="titration-workbench">
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <div>
+                                <label for="lab-acid-select" style="font-size: var(--font-xs); font-weight:600;">Analyte in Beaker (50.0 mL, 0.10 M):</label>
+                                <select id="lab-acid-select" class="search-bar" style="width: 100%;">
+                                    <option value="strong">Hydrochloric Acid (HCl) — Strong Acid</option>
+                                    <option value="weak">Acetic Acid (CH₃COOH, pKa=4.76) — Weak Acid</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="lab-base-select" style="font-size: var(--font-xs); font-weight:600;">Titrant in Buret (0.10 M):</label>
+                                <select id="lab-base-select" class="search-bar" style="width: 100%;">
+                                    <option value="strong">Sodium Hydroxide (NaOH) — Strong Base</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="buret-slider" style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:600;">
+                                    <span>Titrant Added (mL):</span>
+                                    <span id="volume-added-display">0.0 mL</span>
+                                </label>
+                                <input type="range" id="buret-slider" min="0" max="100" step="0.5" value="0" style="width: 100%;">
+                            </div>
+                            <button id="reset-lab-btn" class="btn-secondary">Reset Burette to 0 mL</button>
+
+                            <div class="callout callout-info" id="titration-pedagogy-note">
+                                <strong>Equivalence vs Endpoint:</strong> The equivalence point is the stoichiometric neutralization point (50.0 mL). The indicator endpoint is where phenolphthalein turns pink (pH ≥ 8.2).
+                            </div>
+                        </div>
+
+                        <div class="beaker-visual-area">
+                            <div class="beaker-glass">
+                                <div class="beaker-marks-ruler" aria-hidden="true">
+                                    <span>150</span>
+                                    <span>100</span>
+                                    <span>50</span>
+                                </div>
+                                <div id="beaker-liquid" class="beaker-fluid"></div>
+                            </div>
+                            <div class="ph-indicator-badge">
+                                pH <span id="ph-value-display">1.00</span>
+                            </div>
+                        </div>
+
+                        <div style="height: 280px; width: 100%;">
+                            <canvas id="titrationChart" aria-label="Real-time pH titration curve"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 9: REACTION BALANCER
+                 =================================================================== -->
+            <section id="tab-reactions" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Chemical Equation Balancer (Algebraic Diophantine Solver)</h2>
+                        <p>CBSE Class 10 Chapter 1: Enter an unbalanced reaction to compute lowest integer stoichiometric coefficients preserving conservation of mass.</p>
+                    </div>
+
+                    <div class="calc-input-group" style="max-width: 650px;">
+                        <input type="text" id="reaction-input" class="search-bar" placeholder="e.g., C6H12O6 + O2 = CO2 + H2O or Fe + H2O = Fe3O4 + H2" aria-label="Unbalanced chemical equation">
+                        <button id="balance-btn" class="action-btn">Balance Reaction</button>
+                    </div>
+
+                    <div id="reaction-result" class="reaction-output-card" aria-live="polite">
+                        Enter an unbalanced equation above.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 10: REACTION TYPES EXPLORER (NEW EDUCATIONAL EXPANSION)
+                 =================================================================== -->
+            <section id="tab-rxn-types" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>NCERT Class 10 Reaction Types Explorer</h2>
+                        <p>Systematic classification of chemical changes with laboratory signs, state symbols, and safety guidelines.</p>
+                    </div>
+
+                    <div class="reaction-types-grid" id="reaction-types-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 11: ELEMENT COMPARISON INSPECTOR
+                 =================================================================== -->
+            <section id="tab-compare" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Element Comparison Inspector</h2>
+                        <p>Conduct side-by-side comparative analysis of electronegativity, atomic radius, ionization energy, and density between any two elements.</p>
+                    </div>
+
+                    <div class="search-filter-row" style="margin-bottom: var(--space-6); justify-content: center;">
+                        <div>
+                            <label for="compare-el-a" style="font-size: var(--font-xs); font-weight: 600;">Element A:</label>
+                            <select id="compare-el-a" class="search-bar" style="min-width: 240px;"></select>
+                        </div>
+                        <span style="font-weight: 800; font-size: var(--font-lg); color: var(--text-muted); align-self: flex-end; padding-bottom: var(--space-2);">VS</span>
+                        <div>
+                            <label for="compare-el-b" style="font-size: var(--font-xs); font-weight: 600;">Element B:</label>
+                            <select id="compare-el-b" class="search-bar" style="min-width: 240px;"></select>
+                        </div>
+                    </div>
+
+                    <div class="compare-container">
+                        <div class="compare-element-card" id="card-el-a"></div>
+                        <div class="compare-metrics-column" id="compare-metrics"></div>
+                        <div class="compare-element-card" id="card-el-b"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 12: PROPERTY ANALYTICS
+                 =================================================================== -->
+            <section id="tab-analytics" class="tab-content" role="tabpanel">
+                <div class="scientific-card">
+                    <div class="section-header">
+                        <h2>Property Analytics: Atomic Weight Across Periods</h2>
+                        <p>Interactive Chart.js line plot illustrating atomic weights across Atomic Numbers 1 to 118.</p>
+                    </div>
+                    <div style="height: 380px; width: 100%;">
+                        <canvas id="propertyChart" aria-label="Chart plotting atomic weight against atomic number for all 118 elements"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 TAB 13: SMART PRACTICE QUIZ (10-QUESTION CYCLE ENGINE)
+                 =================================================================== -->
+            <section id="tab-quiz" class="tab-content" role="tabpanel">
+                <div class="quiz-wrapper">
+                    <div class="scientific-card">
+                        <div class="section-header" style="text-align: center;">
+                            <h2>Interactive Chemistry Quiz &amp; Self-Assessment</h2>
+                            <p>10 unique questions every round with non-repeating cycle deck rotation. Includes questions on symbols, atomic structure, periodic trends, stoichiometry, acids, and gas laws.</p>
+                        </div>
+
+                        <div id="quiz-setup">
+                            <div class="search-filter-row" style="justify-content: center; margin-bottom: var(--space-4);">
+                                <label for="quiz-difficulty" style="font-size: var(--font-sm); font-weight:600;">Question Focus:</label>
+                                <select id="quiz-difficulty" class="search-bar" style="min-width: 280px;">
+                                    <option value="mixed">Mixed Comprehensive (All Topics)</option>
+                                    <option value="easy">Foundational (Class 9–10 Core)</option>
+                                    <option value="medium">Intermediate (Atomic &amp; Trends)</option>
+                                    <option value="hard">Advanced (Stoichiometry &amp; Theory)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-4); flex-wrap: wrap;">
+                                <span id="cycle-pill" class="cycle-indicator-pill">Cycle 1 • Non-Repeating Deck</span>
+                                <span id="pool-pill" class="cycle-indicator-pill">Questions Remaining</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <button id="start-quiz-btn" class="action-btn" style="font-size: var(--font-base); padding: var(--space-3) var(--space-8);">Start 10-Question Quiz</button>
+                            </div>
+                        </div>
+
+                        <div id="quiz-container" class="hidden">
+                            <div class="quiz-cycle-bar">
+                                <span id="quiz-tracker">Question 1 of 10</span>
+                                <span id="quiz-cycle-status" class="cycle-indicator-pill">Cycle 1 Active</span>
+                            </div>
+
+                            <div class="quiz-progress-track">
+                                <div id="quiz-progress-fill" class="quiz-progress-fill-bar" style="width: 10%;"></div>
+                            </div>
+
+                            <div class="question-card">
+                                <div id="quiz-tag" class="question-tag">Periodic Concept</div>
+                                <div id="quiz-question" class="question-prompt">Preparing question...</div>
+                                <div id="quiz-options" class="quiz-options-list">
+                                    <!-- Injected by JS -->
+                                </div>
+                                <div id="quiz-explanation" class="explanation-callout hidden" aria-live="polite"></div>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div id="quiz-score" style="font-weight: 700; color: var(--text-primary);">Score: 0 / 10</div>
+                                <button id="next-quiz-btn" class="action-btn" style="display:none;">Next Question ➔</button>
+                            </div>
+                        </div>
+
+                        <div id="quiz-results" class="score-card hidden" aria-live="polite">
+                            <!-- Injected by JS upon completion -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===================================================================
+         ELEMENT DETAILS MODAL DIALOG
+         =================================================================== -->
+    <div id="element-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+        <div class="modal-content">
+            <div class="modal-header-banner"></div>
+            <div class="modal-header">
+                <button id="close-modal" class="close-btn" aria-label="Close element details dialog">&times;</button>
+                <div class="element-symbol-large" id="modal-symbol">H</div>
+                <div class="element-header-info">
+                    <h2 id="modal-name">Hydrogen</h2>
+                    <span class="category-badge" id="modal-category">Nonmetal</span>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="properties-grid">
+                    <div class="property-item">
+                        <span class="label">Atomic Number</span>
+                        <span class="value" id="modal-number">1</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="label">Atomic Weight</span>
+                        <span class="value" id="modal-weight">1.008</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="label">State at 25°C</span>
+                        <span class="value" id="modal-state">Gas</span>
+                    </div>
+                </div>
+
+                <div class="fact-section">
+                    <h3>Verified Chemical Fact</h3>
+                    <p id="modal-fact">Hydrogen is the most abundant element in the universe.</p>
+                    <a id="modal-wiki" href="https://en.wikipedia.org/wiki/Hydrogen" target="_blank" rel="noopener noreferrer" class="wiki-link">Read scientific reference on Wikipedia ↗</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Script Dependencies (CDN with fallback verification) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Centralized Element Dataset -->
+    <script src="elements.js"></script>
+    <!-- Application Logic & Engines -->
+    <script src="script.js"></script>
+</body>
+</html>
